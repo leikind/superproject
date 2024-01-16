@@ -1,9 +1,12 @@
-# Elixir 1.16.0 has broken `mix test ./test/some_test.exs:9`
+Elixir 1.16.0: prepending `./` to the test path in command `mix test ./test/some_test.exs:9` breaks
+the line filter and **all** tests are excluded.
 
 ## Elixir 1.15.7
 
-Both way to execute a test by a line number (`mix test ./test/superproject_test.exs:9` and
-`mix test --exclude test --include line:9 ./test/superproject_test.exs`) are functional:
+* `mix test ./test/superproject_test.exs:9` - functional
+* `mix test test/superproject_test.exs:9` - functional
+* `mix test --exclude test --include line:9 ./test/superproject_test.exs` - functional
+
 
 ```
 ~/superproject → elixir -v
@@ -23,6 +26,15 @@ Including tags: [line: "9"]
 .
 Finished in 0.00 seconds (0.00s async, 0.00s sync)
 3 tests, 0 failures, 2 excluded
+~/superproject: → mix test test/superproject_test.exs:9
+Excluding tags: [:test]
+Including tags: [line: "9"]
+
+.
+Finished in 0.00 seconds (0.00s async, 0.00s sync)
+3 tests, 0 failures, 2 excluded
+
+Randomized with seed 553374
 ~/superproject → mix test --exclude test --include line:9 ./test/superproject_test.exs
 Excluding tags: [:test]
 Including tags: [line: "9"]
@@ -36,9 +48,9 @@ Randomized with seed 220744
 
 ## Elixir 1.16.0
 
-`mix test --exclude test --include line:9 ./test/superproject_test.exs` works correctly.
-
-`mix test ./test/superproject_test.exs:9` excludes all tests.
+* `mix test ./test/superproject_test.exs:9` - broken
+* `mix test test/superproject_test.exs:9` - functional
+* `mix test --exclude test --include line:9 ./test/superproject_test.exs` - functional
 
 ```
 ~/superproject → elixir -v
@@ -61,6 +73,17 @@ Finished in 0.00 seconds (0.00s async, 0.00s sync)
 3 tests, 0 failures, 3 excluded
 
 Randomized with seed 605037
+~/superproject: → mix test test/superproject_test.exs:9
+Compiling 1 file (.ex)
+Generated superproject app
+Excluding tags: [:test]
+Including tags: [location: {"test/superproject_test.exs", 9}]
+
+.
+Finished in 0.00 seconds (0.00s async, 0.00s sync)
+3 tests, 0 failures, 2 excluded
+
+Randomized with seed 915642
 ~/superproject → mix test --exclude test --include line:9 ./test/superproject_test.exs
 Excluding tags: [:test]
 Including tags: [line: 9]
