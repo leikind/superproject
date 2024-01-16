@@ -84,3 +84,17 @@ Which is equivalent to:
 
     $ mix test --exclude test --include line:12 test/some/particular/file_test.exs
 ```
+
+## ASDF
+
+If you use asdf you can switch between Elixir 1.16.0 and Elixir 1.15.7 by switching between git tags:
+
+```
+git checkout 1.16.0
+```
+
+or
+
+```
+git checkout 1.15.7
+```
